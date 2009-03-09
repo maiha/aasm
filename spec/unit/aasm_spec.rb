@@ -265,6 +265,16 @@ describe AASM, '- event callbacks' do
     foo.close!
   end
 
+  it 'should pass old and new states to aasm_event_fired if defined and successful for bang fire' do
+    foo = Foo.new
+    def foo.aasm_event_fired(from, to)
+      from.should == :open
+      to.should == :closed
+    end
+
+    foo.close!
+  end
+
   it 'should not call aasm_event_fired if defined but persist fails for bang fire' do
     foo = Foo.new
     def foo.aasm_event_fired(from, to)

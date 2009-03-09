@@ -133,6 +133,7 @@ module AASM
     unless new_state.nil?
       aasm_state_object_for_state(new_state).call_action(:enter, self)
       
+      old_state = self.aasm_current_state
       persist_successful = true
       if persist
         persist_successful = set_aasm_current_state_with_persistence(new_state)
@@ -142,7 +143,7 @@ module AASM
       end
 
       if persist_successful 
-        self.aasm_event_fired(self.aasm_current_state, new_state) if self.respond_to?(:aasm_event_fired)
+        self.aasm_event_fired(old_state, new_state) if self.respond_to?(:aasm_event_fired)
       else
         self.aasm_event_failed(name) if self.respond_to?(:aasm_event_failed)
       end
